@@ -2,25 +2,17 @@ const chalk = require("chalk");
 const pluginUtils = require("./plugin-utils");
 
 class BasicPlugin {
-    constructor() {
+    constructor(messageArg) {
         pluginUtils.logPluginEvent("pluginDidMount", "BasicPlugin");
-        
-        /**
-         * MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!!
-         * 
-         * @description - Pass an option "message" into your plugin. Use that message and console.log it when webpack / webpack-dev-server 
-         *              - "run"'s or "watch-run"'s
-         * 
-         * PROTIP: Don't forget to actually pass the message in the plugin in your webpack config!
-         * 
-         * 
-         * MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!! MINI QUIZ!!!
-         */ 
+
+        this.messageArg = messageArg;
     }
 
     apply(compiler) {
-        compiler.plugin(["run","watch-run"], (compiler, callback) => {
+        const message = this.messageArg;
 
+        compiler.plugin(["run","watch-run"], (compiler, callback) => {
+            console.log(message);
             callback();
         });
     }
