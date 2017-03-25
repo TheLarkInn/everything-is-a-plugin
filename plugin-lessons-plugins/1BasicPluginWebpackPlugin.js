@@ -4,15 +4,30 @@ const pluginUtils = require("./plugin-utils");
 class BasicPlugin {
     constructor() {
         /**
-         * Part 1.0
+         * Part 1
          * Constructors on webpack plugins are optional. 
-         * They are only needed if you are planning on allowing your user to pass options. 
+         * They are only needed if you are planning on allowing your user to pass options.
          * 
-         * In terminal run `npm run build` to see the event triggered.
          */
          pluginUtils.logPluginEvent("pluginDidMount", "BasicPlugin");
     }
     apply(compiler) {
+        /**
+         * Part 2
+         * How to hook.
+         */
+        compiler.plugin("run", (compiler, callback) => {
+            const pinkMessage = chalk.magenta("\n\nHello World\n\n");
+            console.log(pinkMessage);
+
+            callback();
+        });
+        compiler.plugin("watch-run", (compiler, callback) => {
+            const pinkMessage = chalk.magenta("\n\nHello World\n\n");
+            console.log(pinkMessage);
+
+            callback();
+        }); 
     }
 }
 
