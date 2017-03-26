@@ -15,6 +15,6 @@ module.exports = {
          * Lesson Plan Plugins
          * 
          */
-        new PluginLessonsPlugins.OneBasicPluginWebpackPlugin("Custom Message")
+        PluginLessonsPlugins.OneBasicPluginWebpackPlugin("Custom Message")
     ]
 }
