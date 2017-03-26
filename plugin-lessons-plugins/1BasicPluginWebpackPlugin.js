@@ -1,22 +1,14 @@
 const chalk = require("chalk");
 const pluginUtils = require("./plugin-utils");
 
-const runBefore = (runExpression) => {
-    runExpression();
-    return (before) => { before() };
+function BasicPlugin(message) {
+    this.message = message;
 }
 
-const apply = (props, compiler) => {
-    compiler.plugin("run", (copmiler, callback) => {
-       runBefore(() => {pluginUtils.logPluginEvent("compiler:run ", "BasicPlugin")})(callback); 
+BasicPlugin.prototype.apply = function apply(compiler) {
+    compiler.plugin("run", (compiler, callback) => {
+        pluginUtils.logPluginEvent(`compiler.run.message.${this.message}`, "BasicPlugin");
     });
 }
-
-const BasicPlugin = (props) => {
-    return {
-        apply: apply.bind(this, props)
-    }
-}
-
 
 module.exports = BasicPlugin;
