@@ -13,8 +13,8 @@ module.exports = {
         new webpack.ProgressPlugin(),
         /**
          * Lesson Plan Plugins
-         * 
          */
-        new PluginLessonsPlugins.OneBasicPluginWebpackPlugin("Custom Message")
+        new PluginLessonsPlugins.OneBasicPluginWebpackPlugin({message: "Lesson 1 - Learning at ngConf 2017!"}),
+        new PluginLessonsPlugins.TwoCompilerPluginWebpackPlugin({message: "Lesson 2 - The Compiler Instance!"})
     ]
 }

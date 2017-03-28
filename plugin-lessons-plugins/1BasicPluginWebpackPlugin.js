@@ -1,9 +1,10 @@
-const chalk = require("chalk");
+/**
+ * Just some custom plugin utility(s) I wrote.
+ */
 const pluginUtils = require("./plugin-utils");
 
 /**
  * @class BasicPlugin - This is a example of a webpack plugin using `class`. The most common and easy to understand syntax
- * 
  */
 class BasicPlugin {
     /**
@@ -12,7 +13,9 @@ class BasicPlugin {
      * 
      * @memberOf BasicPlugin
      */
-    constructor(options) {}
+    constructor({message}) {
+        this.message = message;
+    }
     /**
      * @name apply
      * @description This method is invoked by the Compiler on "registration" and an instance of the Compiler is passed in as a parameter. 
@@ -21,7 +24,12 @@ class BasicPlugin {
      * 
      * @memberOf BasicPlugin
      */
-    apply(compiler) {}
+    apply(compiler) {
+        compiler.plugin(["run", "watch-run"], (compiler, callback) => {
+            pluginUtils.logPluginEvent(`${this.message}`, "BasicPlugin");
+            callback();
+        });
+    }
 }
 
 module.exports = BasicPlugin;
