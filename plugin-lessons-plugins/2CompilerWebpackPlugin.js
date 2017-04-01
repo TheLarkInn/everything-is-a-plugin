@@ -88,25 +88,48 @@ class CompilerWebpackPlugin {
          * @param {CompilerParams} params (see @typedef)
          * @description "compilation" - represents the entire dep graph traversing, factory module creation, request resolving, chunk creation, super center. There are so many hooks on the compilation that I want to save it for a separate lesson. But for now we can use the example below to just access a piece of information on the Compilation object itself and console log it. 
          * 
+         * Another critical piece is to access params.normalModuleFactory and add DependencyFactories for specific modules/dependencies you are custom adding to the compilation via a "make" hook (seen below)
+         * Another example of using this hook might be seen in SingleEntryPlugin.js:16
+         * 
          */        
         compiler.plugin("compilation", (compilation, params) => {
             pluginUtils.logPluginEvent(`compiler:compilation:compilation:inputFileSystem = ${compilation.inputFileSystem}`, "CompilerWebpackPlugin", "bgRed", "white", "white");
         });
 
-
+        
+        /**
+         * @param {NormalModuleFactory} normalModuleFactory
+         * @description "normal-module-factory" Provides general access the NormalModuleFactory instance. 
+         * This is a tapable instance and so it can also be plugged into. I'm going to have a specific lesson for this Instance
+         */      
         compiler.plugin("normal-module-factory", (normalModuleFactory) => {
 
         });
-
+        
+        /**
+         * @param {ContextModuleFactory} contextModuleFactory 
+         * @description "context-module-factory" Provides general access to the ContextModuleFactory instance. 
+         * This is a tapable instance and so it can also be plugged into. I'm going to have a specific lesson for this Instance
+         */      
         compiler.plugin("context-module-factory", (contextModuleFactory) => {
             
         });
-
+        
+        /**
+         * @param {Compilation} compilation - params holds the default module factories as well 
+         * @param {Function} callback 
+         * @description "make" - this plugin hook exposes the compilation before the dependency graph has started to trace. There are convienence methods [on the compilation] that you can use to add dependencies and modules to the compilation. (see SingleEntryPlugin.js:22-25) Technically this is the hook that webpack uses internally to start the dep graph trace by invoking the EntryOptionPlugin.js during WebpackOptionsApply.js. This invokes SingleEntryPlugin or MultiEntryPlugin or DynamicEntryPlugin which all use this "make" hook to add dependencies. 
+         */      
         compiler.plugin("make", (compilation, callback) => {
 
             callback();
         });
-
+        
+        /**
+         * @param {Compilation} compilation - params holds the default module factories as well 
+         * @param {Function} callback 
+         * @description "after-compile" - The last step to "decorate", modify or move around modules before they are sent to the "seal" phase. You have access to the entire compilation still at that time. 
+         */      
         compiler.plugin("after-compile", (compilation, callback) => {
 
             callback();
