@@ -1,11 +1,11 @@
 const chalk = require("chalk");
 
 module.exports = {
-    logPluginEvent: function(eventName, pluginName, backgroundColor = "bgCyan") {
-        console.log(chalk.black(chalk[backgroundColor](
+    logPluginEvent: function(eventName, pluginName, backgroundColor = "bgCyan", textColor = "white", titleColor = "black") {
+        console.log(chalk[titleColor](chalk[backgroundColor](
         `
                                                                             
-                        ${chalk.bold(chalk.white("WEBPACK PLUGIN EVENT"))}                                
+                        ${chalk.bold(chalk[textColor]("WEBPACK PLUGIN EVENT"))}                                
                                                                             
                         PLUGIN:     ${pluginName}                             
                         EVENT NAME: ${eventName}                          
