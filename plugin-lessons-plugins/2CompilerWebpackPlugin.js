@@ -4,7 +4,9 @@
 const pluginUtils = require("./plugin-utils");
 
 /**
+ * 
  * @class CompilerWebpackPlugin - This is a example of a webpack plugin using `class`. The most common and easy to understand syntax
+ * 
  */
 class CompilerWebpackPlugin {
     /**
@@ -68,7 +70,7 @@ class CompilerWebpackPlugin {
         });
 
         /**
-         * @param {Compiler} compilation - The Compilation Instance (contains dependency graph information, etc)
+         * @param {Compiler} compilation - The Compilation Instance (contains dependency graph information, etc [we'll cover this in next chapter])
          * @param {Function} callback - callback which signals the hook is finished and that webpack can continue to next step().
          * @description "emit" - This event emits just before webpack is about to emit assets to the output.path directory location. 
          * This is one of the last moments you can add custom generated assets inside of `compilation.assets` (an object with key value pairs of filename:RawSource)
@@ -79,6 +81,11 @@ class CompilerWebpackPlugin {
             callback();
         })
 
+        /**
+         * @param {Stats} stats - The stats object. This contains complete diagnostic information about the entire build process etc.
+         * @description "done" - Assets have been emitted, and the build has finished. Stats are returned from the compilation and piped through to the compiler to be used, analyzed, etc. 
+         * Tools like webpack-bundle-analyze stats which contain every file source, dependnecy graph relation, chunk, module, etc. 
+         */
         compiler.plugin("done", (stats/*: Stats*/) => {
             // console.log(stats); <=== always keep a console.log or node inspector handy so you can follow the flow of source through the plugin system.
             // debugger <= The "done" event sends to parent top ctrl,
