@@ -1,4 +1,12 @@
 /**
+ * @typedef {CompilerParams} params holds the default module factories as well as compilationDependencies, this is used in "compile" and "before-compile", "compilation", and "this-compilation" hooks.
+ * @type {Object} 
+ * @property {NormalModuleFactory} normalModuleFactory - The NFM that you use here is configured, 
+ * @property {ContextModuleFactory} contextModuleFactory -The CMF that you use here is configured, you can write a plugin and apply it here. 
+ * @property {any[]} compilationDependencies - compilationDependencies contain fileDependencies that are created during compilation.
+ */
+
+/**
  * Just some custom plugin utility(s) I wrote.
  */
 const pluginUtils = require("./plugin-utils");
@@ -11,7 +19,8 @@ const pluginUtils = require("./plugin-utils");
 class CompilerWebpackPlugin {
     /**
      * @description Creates an instance of CompilerWebpackPlugin.
-     * @param {object} options - Adds options from your configuration into the plugin for additional functionality
+     * @param {object} options - Adds options from your configuration 
+     * into the plugin for additional functionality
      * 
      * @memberOf CompilerWebpackPlugin
      */
@@ -20,78 +29,87 @@ class CompilerWebpackPlugin {
     }
     /**
      * @name apply
-     * @description This method is invoked by the Compiler on "registration" and an instance of the Compiler is passed in as a parameter. 
+     * @description This method is invoked by the Compiler on "registration" and 
+     * an instance of the Compiler is passed in as a parameter. 
      * @param {Compiler} compiler - This is the Compiler instance. AKA "Webacpk Central Dispatch"
      * 
      * @memberOf CompilerWebpackPlugin
+     * 
      */
     apply(compiler) {
         /**
-         * @param {Compiler} compiler - The Compiler Instance (self)
-         * @param {Function} callback - callback which signals the hook is finished and that webpack can continue to next compilation step ()
-         * @description "before-run" - Runs before the compiler begins any compilation process. 
-         *
-         */
-        compiler.plugin("before-run", (compiler, callback) => {
-            pluginUtils.logPluginEvent("compiler:before-run", "CompilerWebpackPlugin", "bgMagenta");
-            callback();
-        });
-
-        /**
-         * @param {String} fileName - Name of the file that changed and caused the event rebuild
-         * @param {Number} changeTime - A number representation of the timestamp for when the file (in question) changed
-         * @description "invalid" - This event fires when in WATCH mode when a file has changed. Passing the file name and time it changed. 
-         * This even will execute before run-watch or other compiler hooks. Useful for a variety of things. Event logging, tracing, etc or executing something essentially 
-         * before anything else happens. 
+         * @param {CompilerParams} params - params holds the default module factories as well 
+         * as compilation dependencies in a single object
+         * @param {Function} callback - callback to inform the compiler to continue
+         * @description "before-compile" - This purpose of this hook is to perform functionality before the `compiler` hook has executed and is run. 
+         * Examples of things that are done within webpack source for this hook include storing files (See DllReferencePlugin:22). 
          * 
          */
-        compiler.plugin("invalid", (fileName, changeTime) => {
-            pluginUtils.logPluginEvent(`compiler:invalid:fileName-${fileName}:changeTime-${changeTime}\n The file: ${fileName} triggered a rebuild at change time ${changeTime}`, "CompilerWebpackPlugin", "bgRed"); 
-        });
+        compiler.plugin("before-compile", (params, callback) => {
+            const {normalModuleFactory, contextModuleFactory} = params;
+            const foo = "DO SOMETHING AND SET IT UP BEFORE COMPILE STEP";
+            params.foo = foo;
 
-        /**
-         * @param {Compiler} compiler - The Compiler Instance (self)
-         * @param {Function} callback - callback which signals the hook is finished and that webpack can continue to next compilation step ()
-         * @description ["run", "run-watch"] - This plugin is an async "before" hook for the compiler running. You use "run" for single builds,
-         * and you use "run-watch" for --watch mode builds (dev-server also).
-         */
-        compiler.plugin(["run", "watch-run"], (compiler, callback) => {            
-            pluginUtils.logPluginEvent(`${this.message}`, "CompilerWebpackPlugin");
+            pluginUtils.logPluginEvent(`compiler:before-compile:Param Added:Params: -- ${Object.keys(params)}`, "CompilerWebpackPlugin", "bgGreen", "magenta", "white");
+
             callback();
         });
 
+
         /**
-         * @param {Error} error - The error Object<Error> that gets emitted with the "failed" event.
-         * @description "failed" - This error occurs when a build has failed. An error is provided to emit or read details. 
-         * Great for all sorts of diagnostics, reported or custom error hooking in your own plugin.
+         * @param {CompilerParams} params - params holds the default module factories as well as compilation dependencies in a single object
+         * @description "compile" - This hook fires immediately after "compile", and also has access to params.  
+         * webpack itself leverages `compiler.plugin("compile"` to decorate the NormalModuleFactory to add 2-3 additional module factories (dll, delegated, etc.) See (ExternalsPlugin.js:15, DelegatedPlugin.js:21); This supports additional 
+         * module types like `ExternalsModule` and `DllModule` and `DelegatedModule`
+         * 
          */
-        compiler.plugin("failed", (error) => {
-            pluginUtils.logPluginEvent("compiler:failed","CompilerWebpackPlugin", "bgRed");
+        compiler.plugin("compile", (params) => { 
+            const {foo} = params;
+
+            // For now in this example 
+            // I'm going to just show how to use params 
+            // that were set from before compile. 
+            // Simple right?
+            pluginUtils.logPluginEvent(`compiler:compile:ExtractedNewParam:Foo:${foo}`, "CompilerWebpackPlugin", "bgGreen", "magenta", "white");
         });
 
         /**
-         * @param {Compiler} compilation - The Compilation Instance (contains dependency graph information, etc [we'll cover this in next chapter])
-         * @param {Function} callback - callback which signals the hook is finished and that webpack can continue to next step().
-         * @description "emit" - This event emits just before webpack is about to emit assets to the output.path directory location. 
-         * This is one of the last moments you can add custom generated assets inside of `compilation.assets` (an object with key value pairs of filename:RawSource)
+         * @param {Compilation} compilation - params holds the default module factories as well 
+         * @param {CompilerParams} params (see @typedef)
+         * @description "this-compilation" there is 1 very subtle difference between these two hooks. Compared to "compilation" which is the single overarching parent compilation returned from the 1 compiler instance, `this-compilation` can be the product of childCompilers's compilations (aka child compilations). The `this-compilation` is like saying "each-compilation". Any time you plugin to "this-copmilation" you will see this hook potentially execute multiple times (dependending on what other plugins are being used in your configuration).
+         * 
          */
-        compiler.plugin("emit", (compilation, callback) => {
-            pluginUtils.logPluginEvent("compiler:emit", "CompilerWebpackPlugin", "bgWhite", "black", "black");
+        compiler.plugin("this-compilation", (compilation, params) => {
+            pluginUtils.logPluginEvent("compiler:this-compilation", "CompilerWebpackPlugin", "bgRed", "white", "white");
+        });
+        
+        /**
+         * @param {Compilation} compilation - params holds the default module factories as well 
+         * @param {CompilerParams} params (see @typedef)
+         * @description "compilation" - represents the entire dep graph traversing, factory module creation, request resolving, chunk creation, super center. There are so many hooks on the compilation that I want to save it for a separate lesson. But for now we can use the example below to just access a piece of information on the Compilation object itself and console log it. 
+         * 
+         */        
+        compiler.plugin("compilation", (compilation, params) => {
+            pluginUtils.logPluginEvent(`compiler:compilation:compilation:inputFileSystem = ${compilation.inputFileSystem}`, "CompilerWebpackPlugin", "bgRed", "white", "white");
+        });
+
+
+        compiler.plugin("normal-module-factory", (normalModuleFactory) => {
+
+        });
+
+        compiler.plugin("context-module-factory", (contextModuleFactory) => {
             
+        });
+
+        compiler.plugin("make", (compilation, callback) => {
+
             callback();
-        })
+        });
 
-        /**
-         * @param {Stats} stats - The stats object. This contains complete diagnostic information about the entire build process etc.
-         * @description "done" - Assets have been emitted, and the build has finished. Stats are returned from the compilation and piped through to the compiler to be used, analyzed, etc. 
-         * Tools like webpack-bundle-analyze stats which contain every file source, dependnecy graph relation, chunk, module, etc. 
-         */
-        compiler.plugin("done", (stats/*: Stats*/) => {
-            // console.log(stats); <=== always keep a console.log or node inspector handy so you can follow the flow of source through the plugin system.
-            // debugger <= The "done" event sends to parent top ctrl,
-            const moduleString = stats.toJson().modules.map(module => module.identifier).join(`\n`);
+        compiler.plugin("after-compile", (compilation, callback) => {
 
-            pluginUtils.logPluginEvent(`compiler:done\n${moduleString}`, "CompilerWebpackPlugin", "bgGreen");
+            callback();
         });
     }
 }
