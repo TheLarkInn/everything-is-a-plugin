@@ -5,7 +5,7 @@ webpackJsonp([0],{
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony default export */ __webpack_exports__["default"] = ("lazy-c");
+/* harmony default export */ __webpack_exports__["default"] = ("lazy-hijacked-request");
 
 /***/ })
 

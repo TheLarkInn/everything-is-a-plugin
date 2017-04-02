@@ -176,11 +176,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 4))
+__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 6))
     .then(moduleA => {
-        return __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 5))
+        return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 4))
             .then(moduleB => {
-                return __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 6))
+                return __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 5))
                     .then(moduleC => {
                         console.log(moduleA, moduleB, moduleC);
                     });

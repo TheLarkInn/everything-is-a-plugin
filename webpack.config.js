@@ -15,6 +15,7 @@ module.exports = {
          * Lesson Plan Plugins
          */
         new PluginLessonsPlugins.OneBasicPluginWebpackPlugin({message: "Lesson 1 - Learning at ngConf 2017!"}),
-        new PluginLessonsPlugins.TwoCompilerPluginWebpackPlugin({message: "Lesson 2 - The Compiler Instance!"})
+        new PluginLessonsPlugins.TwoCompilerPluginWebpackPlugin({message: "Lesson 2 - The Compiler Instance!"}),
+        new PluginLessonsPlugins.ThreeNormalModuleFactoryPlugin()
     ]
 }
