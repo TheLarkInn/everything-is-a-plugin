@@ -13,3 +13,18 @@ module.exports = {
         )));
     }
 }
+
+
+const makeCustomPlugin = (superclass) => class extends superclass {
+    constructor(options) {}
+
+    apply(instance) {
+
+    }    
+}
+
+const Plugin = (x) => ({
+    map: f => PluginGenerator(f(x)),
+    fold: f => f(x),
+    inspect: () => `PluginGenerator(${x})`
+});

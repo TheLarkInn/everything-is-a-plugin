@@ -72,16 +72,9 @@ class NormalModuleFactoryPlugin {
                             d.critical = false;
                     });
                 }
-
+                pluginUtils.logPluginEvent("context-module-factory:before-resolve:Created Context Module out of nothing!", "ContextModuleFactoryPlugin", "bgWhite", "blue", "blue");
                 return callback(null, result);
             });
-
-            // TODO: Find out "alternative"            
-            // contextModuleFactory.plugin("alternative", ([resource], callback) => {
-
-
-            //     return callback(null, )
-            // })
         });
     }
 }

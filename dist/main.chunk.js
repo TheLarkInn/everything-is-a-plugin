@@ -246,7 +246,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 // }
 
 const criticalContextRequire = (moduleName) => {
-    return __webpack_require__(4)(moduleName);
+    return __webpack_require__(4)(moduleName); // <=== This should emit a warning by default in webpack, because there is no context provided
 }
 
 __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 13))

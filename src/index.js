@@ -7,7 +7,7 @@ import c from "./c";
 // }
 
 const criticalContextRequire = (moduleName) => {
-    return require(moduleName);
+    return require(moduleName); // <=== This should emit a warning by default in webpack, because there is no context provided
 }
 
 import("./lazy/lazy-a")
@@ -20,4 +20,5 @@ import("./lazy/lazy-a")
                     });
             });
     });
+    
     
