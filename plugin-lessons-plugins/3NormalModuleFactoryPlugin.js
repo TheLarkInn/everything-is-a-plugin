@@ -3,6 +3,8 @@
  */
 const path = require("path");
 const pluginUtils = require("./plugin-utils");
+const BeforeResolveNormalModuleFactoryPlugin = require("./31NMFBeforeResolvePlugin");
+const AfterResolveNormalModuleFactoryPlugin = require("./32NMFAfterResolvePlugin");
 
 /**
  * 
@@ -37,59 +39,49 @@ class NormalModuleFactoryPlugin {
      * 
      */
     apply(compiler) {
+
+        // Refactorable!!!! Remember that plugins are meant to be composable single purpose pieces of functionality. That way they can be reused and modular!!!
         compiler.plugin("normal-module-factory", (normalModuleFactory, params) => {
             const LAZY_A_MODULE_RESULT_REGEXP = /lazy-a/;
-            const didMatchRequestWith = (request) => {
-                return (regexp) => { return regexp.test(request); }
+            const replacementRequestString = "lazy-hijacked-request";
+            const nmfPluginParams = {
+                resourceRegex: LAZY_A_MODULE_RESULT_REGEXP,
+                newRequestString: replacementRequestString
             }
+            
+            normalModuleFactory.apply(
+                new BeforeResolveNormalModuleFactoryPlugin(nmfPluginParams),
+                new AfterResolveNormalModuleFactoryPlugin(nmfPluginParams)
+            );
+        });
+
+        compiler.plugin("context-module-factory", (contextModuleFactory, params) => {
+            const DEFAULT_CONTEXT_REGEXP = /\/everything-is-a-plugin\/src/;
 
             /**
-             * @param {BeforeResolveResultParams} result - The result parameters that have been passed from the parser and compialtion.
-             * @param {Function} callback - The callback must be returned and have the "new updated result" passed inside. (See below)
-             * 
-             * @description "before-resolve" - module factories are the glue that ties the parsed request, to the resolver and the NormalModule creation. This before hook allows a developer to modify a parsed and "about-to-be-request" resource path to a module (IE: require("./foo/index.js") the string in the require is the resource ) before it is resolved and turned into an actual module.
+             * @description "before-resolve" - This is identical to normal-module-factory:before-resolve, except now we have the ability to create, remove, filter, make critical/not-critical ContextDependencies. For more information see ContextModule.
+             * @param {ContextModuleFactoryBeforeResolveResult} result - This will contain all the same information that nmf will have, expect also context, regex patterns for determining new or existing contexts. These can be modified
+             * @param {Function} callback any changes made to result must be passed back in and the callback must be `returned`.
              */
-            normalModuleFactory.plugin("before-resolve", (result, callback) => {
-                // console.log(result);
-                if (didMatchRequestWith(result.request)(LAZY_A_MODULE_RESULT_REGEXP)) {
-                    pluginUtils.logPluginEvent(
-                        `normal-module-factory:before-resolve:found-matching-request${result.request}`, 
-                        "NormalModuleFactoryPlugin", 
-                        "bgCyan", 
-                        "white", 
-                        "white"
-                    );
-                    result.request = result.request.replace(LAZY_A_MODULE_RESULT_REGEXP, "lazy-hijacked-request.js");
-                }
-                return callback(null, result);
-            }); 
-
-
-            /**
-             * 
-             * @param {Object} result - The result parameter in the after-resolve callback is much more decorated and filled with many properties. Too many to document here, however resource is one. Easy enough to console.log which ones show up however!
-             * @param {Function} callback - This callback either expects an error or a success to be passed through. It will continue to now create modules after this is called. 
-             * @description "after-resolve" - module factories are the glue that ties the parsed request, to the resolver. This after-resolve hook can not only provide information for you about a resolved module, but also allow you to customize and add additional resolved properties, like loaders, or (for ContextModuleFactory) a new and separate context map as well as even Dependency information like:
-             * `importedVar: '__WEBPACK_IMPORTED_MODULE_2__c__', from HarmonyImportDependency(s).
-             * 
-             */
-            normalModuleFactory.plugin("after-resolve", (result, callback) => {
-                // console.log(result) 
-                // should not step into since we wiped any file that matches /lazy-a/ and swapped it out for a different request
-                if (didMatchRequestWith(result.resource)(LAZY_A_MODULE_RESULT_REGEXP)) { 
-                    pluginUtils.logPluginEvent(
-                        `normal-module-factory:after-resolve:found-matching-resource${result.resource}`, 
-                        "NormalModuleFactoryPlugin", 
-                        "bgYellow", 
-                        "black", 
-                        "black"
-                    );
-
-                    result.resource = path.resolve(path.dirname(result.resource), "lazy-hijacked-request");
+            contextModuleFactory.plugin("before-resolve", (result, callback) => {
+                if(DEFAULT_CONTEXT_REGEXP.test(result.context) && result.request === ".") { // look for a result where the context of the request is in repo/src, and the request is an invalid context aka `require(someVar)`
+                    result.request = "./context"; // Modify thie real request path to be a context folder (we are going to create a new context out of nothing)
+                    result.regExp = /lazy-(.*)\.js/; // Create a regex pattern that will look inside folder for all modules that match the regex path. They will be turned into a ContextModule. In this case its like we are running "require(`./context/lazy-${moduleName}.js`)" meanwhile our real request is require(someVar)
+                    result.dependencies.forEach((d) => { // Since the current request causes a critical dependency warning, we need to set this to false now that we have created the appropriate ContextModule map. 
+                        if(d.critical)
+                            d.critical = false;
+                    });
                 }
 
                 return callback(null, result);
             });
+
+            // TODO: Find out "alternative"            
+            // contextModuleFactory.plugin("alternative", ([resource], callback) => {
+
+
+            //     return callback(null, )
+            // })
         });
     }
 }

@@ -2,6 +2,14 @@ import a from "./a";
 import b from "./b";
 import c from "./c";
 
+// const contextRequire = (moduleName) => {
+//     return require(`./context/${moduleName}.js`);
+// }
+
+const criticalContextRequire = (moduleName) => {
+    return require(moduleName);
+}
+
 import("./lazy/lazy-a")
     .then(moduleA => {
         return import("./lazy/lazy-b")
@@ -12,3 +20,4 @@ import("./lazy/lazy-a")
                     });
             });
     });
+    

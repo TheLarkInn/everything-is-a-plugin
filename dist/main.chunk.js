@@ -139,53 +139,127 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* unused harmony default export */ var _unused_webpack_default_export = ("a");
+
 
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony default export */ var _unused_webpack_default_export = ("b");
+/* unused harmony default export */ var _unused_webpack_default_export = ("a");
 
 /***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony default export */ var _unused_webpack_default_export = ("c");
+/* unused harmony default export */ var _unused_webpack_default_export = ("b");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* unused harmony default export */ var _unused_webpack_default_export = ("c");
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./lazy-a.js": 0,
+	"./lazy-b.js": 5,
+	"./lazy-c.js": 6,
+	"./lazy-d.js": 7,
+	"./lazy-e.js": 8,
+	"./lazy-f.js": 9,
+	"./lazy-hijacked-request.js": 0
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 4;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__a__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__b__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__c__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__a__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__b__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__c__ = __webpack_require__(3);
 
 
 
 
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 6))
+// const contextRequire = (moduleName) => {
+//     return require(`./context/${moduleName}.js`);
+// }
+
+const criticalContextRequire = (moduleName) => {
+    return __webpack_require__(4)(moduleName);
+}
+
+__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 13))
     .then(moduleA => {
-        return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 4))
+        return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 11))
             .then(moduleB => {
-                return __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 5))
+                return __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 12))
                     .then(moduleC => {
                         console.log(moduleA, moduleB, moduleC);
                     });
             });
     });
+    
 
 /***/ })
 /******/ ]);
