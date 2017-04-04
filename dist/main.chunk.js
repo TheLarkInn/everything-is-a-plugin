@@ -139,7 +139,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -175,11 +175,11 @@
 
 var map = {
 	"./lazy-a.js": 0,
-	"./lazy-b.js": 5,
-	"./lazy-c.js": 6,
-	"./lazy-d.js": 7,
-	"./lazy-e.js": 8,
-	"./lazy-f.js": 9,
+	"./lazy-b.js": 6,
+	"./lazy-c.js": 7,
+	"./lazy-d.js": 8,
+	"./lazy-e.js": 9,
+	"./lazy-f.js": 10,
 	"./lazy-hijacked-request.js": 0
 };
 function webpackContext(req) {
@@ -202,7 +202,7 @@ webpackContext.id = 4;
 /* 5 */
 /***/ (function(module, exports) {
 
-
+console.log("I AM BUNDLED!");
 
 /***/ }),
 /* 6 */
@@ -230,6 +230,12 @@ webpackContext.id = 4;
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -237,6 +243,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__a__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__b__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__c__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__wat_module__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__wat_module___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__wat_module__);
 
 
 
@@ -249,16 +257,22 @@ const criticalContextRequire = (moduleName) => {
     return __webpack_require__(4)(moduleName); // <=== This should emit a warning by default in webpack, because there is no context provided
 }
 
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 13))
+__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 14))
     .then(moduleA => {
-        return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 11))
+        return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 12))
             .then(moduleB => {
-                return __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 12))
+                return __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 13))
                     .then(moduleC => {
                         console.log(moduleA, moduleB, moduleC);
                     });
             });
     });
+
+
+// Creating your own "description file", and loading it. This should load wat.js automatically. 
+
+
+    
     
 
 /***/ })
