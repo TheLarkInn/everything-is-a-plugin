@@ -67,11 +67,12 @@ class ResolverPlugin {
                     relativePath: relativePath
                 });
 
-                // This basically tells 
+                // This function now tells the resolver to continue down to the next waterfall resolution plugin. It will contininue to collect information until the file is found. In this case we have provided the full path, and we are passing to "directory".
                 resolver.doResolve("directory", obj, "using description file: " + result.path + " (relative path: " + relativePath + ")", createInnerCallback((err, result) => {
 					if(err) return callback(err);
 					if(result) {
-                        console.log(result);
+                        // To see the result, feel free and uncomment this. 
+                        // console.log(result);
                         pluginUtils.logPluginEvent(`Successfully resolved ${result.path}\n via custom description file ${result.__innerRequest_relativePath}`, "ResolverPlugin", "bgRed", "white", "white");
                         return callback(null, result);
                     }
