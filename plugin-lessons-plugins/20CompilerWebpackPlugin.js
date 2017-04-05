@@ -102,28 +102,21 @@ class CompilerWebpackPlugin {
          * @description "normal-module-factory" Provides general access the NormalModuleFactory instance. 
          * This is a tapable instance and so it can also be plugged into. I'm going to have a specific lesson for this Instance
          */      
-        compiler.plugin("normal-module-factory", (normalModuleFactory) => {
-
-        });
+        compiler.plugin("normal-module-factory", (normalModuleFactory) => {});
         
         /**
          * @param {ContextModuleFactory} contextModuleFactory 
          * @description "context-module-factory" Provides general access to the ContextModuleFactory instance. 
          * This is a tapable instance and so it can also be plugged into. I'm going to have a specific lesson for this Instance
          */      
-        compiler.plugin("context-module-factory", (contextModuleFactory) => {
-            
-        });
+        compiler.plugin("context-module-factory", (contextModuleFactory) => {});
         
         /**
          * @param {Compilation} compilation - params holds the default module factories as well 
          * @param {Function} callback 
          * @description "make" - this plugin hook exposes the compilation before the dependency graph has started to trace. There are convienence methods [on the compilation] that you can use to add dependencies and modules to the compilation. (see SingleEntryPlugin.js:22-25) Technically this is the hook that webpack uses internally to start the dep graph trace by invoking the EntryOptionPlugin.js during WebpackOptionsApply.js. This invokes SingleEntryPlugin or MultiEntryPlugin or DynamicEntryPlugin which all use this "make" hook to add dependencies. 
          */      
-        compiler.plugin("make", (compilation, callback) => {
-
-            callback();
-        });
+        compiler.plugin("make", (compilation, callback) => { callback(); });
         
         /**
          * @param {Compilation} compilation - params holds the default module factories as well 

@@ -23,7 +23,4 @@ import("./lazy/lazy-a")
 
 
 // Creating your own "description file", and loading it. This should load wat.js automatically. 
-import "./wat_module"
-
-    
-    
+import "./wat_module";

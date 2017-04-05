@@ -16,7 +16,8 @@ module.exports = {
          */
         new PluginLessonsPlugins.OneBasicPluginWebpackPlugin({message: "Lesson 1 - Learning at ngConf 2017!"}),
         new PluginLessonsPlugins.TwoCompilerPluginWebpackPlugin({message: "Lesson 2 - The Compiler Instance!"}),
-        new PluginLessonsPlugins.ThreeModuleFactoryPlugin({message: "Lesson 3 - The Module Factory Instances!"}),
-        new PluginLessonsPlugins.FourResolverPlugin("Lesson 4 - The Resolver Instance")
+        new PluginLessonsPlugins.ThreeModuleFactoryWebpackPlugin({message: "Lesson 3 - The Module Factory Instances!"}),
+        new PluginLessonsPlugins.FourResolverWebpackPlugin({message: "Lesson 4 - The Resolver Instance"}),
+        new PluginLessonsPlugins.FiveTemplateWebpackPlugin({message: "Lesson 5 - The (Main) Template Instance"})
     ]
 }
